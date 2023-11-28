@@ -28,9 +28,11 @@ extern "C" {
 
 	typedef struct
 	{
-		int* stack_pointer;
+		//int* stack_pointer;
+		int num;
 		int* stack_memory;
-		int* end;          // スタックが底をついたか確認するためのポインタ（構造体を変更して別実装にしても良い）
+		//int* end;          // スタックが底をついたか確認するためのポインタ（構造体を変更して別実装にしても良い）
+		int capacity;		// アドレスの連続性を確保するために、配列を用いた実装にした
 	}STACK;
 
 	void initialize(STACK* s, size_t mem_size);   // mem_size の容量でスタック用のメモリを確保する
