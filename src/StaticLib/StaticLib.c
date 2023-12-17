@@ -62,7 +62,6 @@ bool push_array(STACK* s, int* addr, int num)
 			s->stack_top++;
 			s->stack_memory[s->stack_top] = addr[i];
 		}
-
 		return true;
 	}
 }
@@ -121,5 +120,4 @@ int pop_array(STACK* s, int* addr, int num)
 		} while (s->stack_top > -1);
 		return renum;
 	}
-
 }
