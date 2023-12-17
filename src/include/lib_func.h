@@ -28,9 +28,9 @@ extern "C" {
 
 	typedef struct
 	{
-		int* stack_pointer;
+		int stack_top;// 先頭の要素の位置
 		int* stack_memory;
-		int* end;          // スタックが底をついたか確認するためのポインタ（構造体を変更して別実装にしても良い）
+		int stack_max;          // スタックが底をついたか確認するためのポインタ（構造体を変更して別実装にしても良い）
 	}STACK;
 
 	void initialize(STACK* s, size_t mem_size);   // mem_size の容量でスタック用のメモリを確保する
