@@ -6,14 +6,14 @@
 #include "../include/lib_func.h"
 
 
-// mem_size の容量でスタック用のメモリを確保する
+
 
 void initialize(STACK* s, size_t mem_size) {
 	if (s == NULL) return;
 
 	s->stack_memory = (int*)malloc(mem_size);
 	s->stack_pointer = s->stack_memory;
-	s->end = s->stack_memory + mem_size / sizeof(int);  // end ポインタを設定
+	s->end = s->stack_memory + mem_size / sizeof(int);  
 }
 
 
@@ -33,79 +33,71 @@ void finalize(STACK* s)
 
 
 
-// valの値をスタックに積む。実行の成否を返す
-// 修正: pushが成功する条件を満たすように修正
-// 修正: pushが成功する条件を満たすように修正
 bool push(STACK* s, int val) {
-	if (s == NULL || s->stack_pointer == NULL || s->end == NULL) {
-		return false; // NULLポインタチェック
+	if (s == NULL ) {
+		return false; 
+	}
+	if (s->stack_pointer-1 < s->stack_memory) {
+		return false; 
 	}
 
-	if (s->stack_pointer == s->end) {
-		return false; // スタックオーバーフロー
-	}
+	*--s->stack_pointer = val;
 
-	*(s->stack_pointer) = val;
-	s->stack_pointer++;
 
 	return true;
 }
 
 
 
-// addrから始まるnum個の整数をスタックに積む。実行の成否を返す
-// 修正: push_arrayが成功する条件を満たすように修正
-// 修正: push_arrayが成功する条件を満たすように修正
-bool push_array(STACK* s, int* addr, int n)
+
+bool push_array(STACK* s, int* addr, int num)
 {
-	if (s == NULL || addr == NULL || n <= 0)
+	if (s == NULL )
 		return false;
 
-	// 修正: スタックに余裕がない場合
-	if ((size_t)n > (size_t)(s->end - s->stack_pointer)) {
+	if(num<=0)
+		return false;
+	
+	if (s->stack_pointer-num<s->stack_memory) {
 		return false;
 	}
 
-	for (int i = 0; i < n; ++i) {
-		if (!push(s, addr[i])) {
-			// push が失敗した場合はエラーを返す
-			return false;
-		}
-	}
+	s->stack_pointer -= num;
+	memcpy(s->stack_pointer, addr, num * sizeof(int));//numの数だけメモリを確保
 
-	return true;  // 正常終了を示す true を返す
+	return true;  
 }
 
 
-// スタックから一つの要素を取り出す
 
-// 修正: メモリ操作が逆順になっていたため修正
 int pop(STACK* s) {
-	if (s == NULL || s->stack_pointer == NULL || s->stack_pointer == s->stack_memory) {
-		return 0; // スタックアンダーフローまたはNULLポインタエラー
+	if (s == NULL ) {
+		return false; 
 	}
+	if (s->end < s->stack_pointer + 1) return 0;
 
-	s->stack_pointer--;  // デクリメントしてから値を取得
-	int result = *(s->stack_pointer);
-
-	return result;
+	return *s->stack_pointer++;
 }
 
-// addrにスタックからnumの要素を取り出す。取り出せた個数を返す
+
 
 int pop_array(STACK* s, int* addr, int num) {
-	if (s == NULL || addr == NULL || num <= 0) {
-		return 0; // NULLポインタチェックまたは不正な引数
+	if (s == NULL ) {
+		return　false 
 	}
-
-	int count = 0;
-	while (num > 0 && s->stack_pointer > s->stack_memory) {
-		*(addr++) = *(--(s->stack_pointer));
-		num--;
-		count++;
+	if(addr==NULL){
+		
+	return false;
+}
+	if (s->end < s->stack_pointer + num) {
+		num = s->end - s->stack_pointer;
 	}
+	if (num < 0) return 0;
 
-	return count;
+	memcpy(addr, s->stack_pointer, sizeof(int) * num);
+	s->stack_pointer += num;
+
+	return num;
 }
 
 
